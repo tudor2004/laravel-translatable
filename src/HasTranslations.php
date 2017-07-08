@@ -69,7 +69,11 @@ trait HasTranslations
     {
         $this->guardAgainstUntranslatableAttribute($key);
 
-        return json_decode($this->getAttributes()[$key] ?? '' ?: '{}', true);
+        $translations = json_decode($this->getAttributes()[$key] ?? '' ?: '{}', true);
+        
+        return collect($translations)->reject(function($value) {
+        	return is_null($value);
+        })->toArray();      
     }
 
     /**
